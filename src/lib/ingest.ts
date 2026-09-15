@@ -12,6 +12,31 @@ const parser = new Parser({
   },
 });
 
+async function fetchOgImage(url: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; NCPoliticsBot/1.0)" },
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const match =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/);
+    if (!match) return null;
+    const imgUrl = match[1];
+    // Return absolute URLs only
+    if (imgUrl.startsWith("http")) return imgUrl;
+    if (imgUrl.startsWith("//")) return `https:${imgUrl}`;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 function extractImage(item: Record<string, unknown>): string | null {
   const mediaContent = item.mediaContent as
     | { $?: { url?: string } }
@@ -137,13 +162,16 @@ export async function ingestSource(sourceId: string): Promise<IngestResult> {
         });
         if (slugExists) slug = ensureUniqueSlug(slug);
 
+        const rssImage = extractImage(item as unknown as Record<string, unknown>);
+        const imageUrl = rssImage ?? await fetchOgImage(link);
+
         await prisma.article.create({
           data: {
             title,
             slug,
             summary,
             originalUrl: link,
-            imageUrl: extractImage(item as unknown as Record<string, unknown>),
+            imageUrl,
             author: item.creator || (item as unknown as Record<string, string>).author || null,
             publishedAt,
             sourceId: source.id,
