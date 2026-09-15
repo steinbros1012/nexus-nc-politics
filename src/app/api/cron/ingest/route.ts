@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ingestAllSources } from "@/lib/ingest";
+import prisma from "@/lib/prisma";
+
+// Breaking news auto-expires after 24 hours
+const BREAKING_EXPIRY_HOURS = 24;
+
+async function expireBreakingNews() {
+  const cutoff = new Date(Date.now() - BREAKING_EXPIRY_HOURS * 60 * 60 * 1000);
+  const result = await prisma.article.updateMany({
+    where: {
+      isBreaking: true,
+      publishedAt: { lt: cutoff },
+    },
+    data: { isBreaking: false },
+  });
+  return result.count;
+}
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -10,7 +26,11 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const results = await ingestAllSources();
+    const [results, expiredBreaking] = await Promise.all([
+      ingestAllSources(),
+      expireBreakingNews(),
+    ]);
+
     const totalNew = results.reduce((sum, r) => sum + r.articlesNew, 0);
     const totalErrors = results.reduce((sum, r) => sum + r.articlesErr, 0);
 
@@ -19,6 +39,7 @@ export async function GET(req: NextRequest) {
       totalNew,
       totalErrors,
       sources: results.length,
+      expiredBreaking,
       results,
     });
   } catch {
