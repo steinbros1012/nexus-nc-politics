@@ -96,10 +96,12 @@ export default function SubmitOpinionPage() {
 
   if (submitted) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold mb-2">Submission Received</h1>
-        <p className="text-muted mb-6">
+      <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+        <CheckCircle className="w-14 h-14 text-green-500 mx-auto mb-4" />
+        <h1 className="text-2xl font-bold mb-2 text-[#0f172a]">
+          Submission Received
+        </h1>
+        <p className="text-gray-400 mb-6 leading-relaxed">
           Thank you for your submission. Our editorial team will review it and
           get back to you via email.
         </p>
@@ -114,19 +116,21 @@ export default function SubmitOpinionPage() {
   }
 
   const inputClass =
-    "w-full px-4 py-2.5 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-link bg-white";
-  const labelClass = "block text-sm font-medium text-foreground mb-1";
-  const errorClass = "text-xs text-accent mt-1";
+    "w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent bg-white text-foreground text-sm transition-shadow";
+  const labelClass = "block text-sm font-medium text-foreground mb-1.5";
+  const errorClass = "text-xs text-accent mt-1.5";
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-2">Submit an Opinion</h1>
-      <p className="text-muted mb-8">
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-extrabold mb-2 text-[#0f172a] tracking-tight">
+        Submit an Opinion
+      </h1>
+      <p className="text-gray-400 mb-10 leading-relaxed">
         Share your perspective on North Carolina politics and policy. We accept
         editorials (800-1200 words) and letters to the editor (200-400 words).
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
         {/* Type */}
         <div>
           <label className={labelClass}>Submission Type *</label>
@@ -241,14 +245,14 @@ export default function SubmitOpinionPage() {
         </div>
 
         {/* Confirmations */}
-        <div className="space-y-3 bg-section-bg p-4 rounded-lg">
-          <label className="flex items-start gap-2 text-sm">
+        <div className="space-y-3.5 bg-section-bg p-5 rounded-lg">
+          <label className="flex items-start gap-2.5 text-sm cursor-pointer">
             <input
               type="checkbox"
               {...register("confirmOriginal")}
-              className="mt-1"
+              className="mt-0.5 rounded"
             />
-            <span>
+            <span className="text-foreground leading-snug">
               I confirm this is my original work and has not been published
               elsewhere. *
             </span>
@@ -257,13 +261,13 @@ export default function SubmitOpinionPage() {
             <p className={errorClass}>{String(errors.confirmOriginal.message)}</p>
           )}
 
-          <label className="flex items-start gap-2 text-sm">
+          <label className="flex items-start gap-2.5 text-sm cursor-pointer">
             <input
               type="checkbox"
               {...register("confirmAccuracy")}
-              className="mt-1"
+              className="mt-0.5 rounded"
             />
-            <span>
+            <span className="text-foreground leading-snug">
               I confirm the facts presented are accurate to the best of my
               knowledge. *
             </span>
@@ -272,13 +276,13 @@ export default function SubmitOpinionPage() {
             <p className={errorClass}>{String(errors.confirmAccuracy.message)}</p>
           )}
 
-          <label className="flex items-start gap-2 text-sm">
+          <label className="flex items-start gap-2.5 text-sm cursor-pointer">
             <input
               type="checkbox"
               {...register("confirmEditing")}
-              className="mt-1"
+              className="mt-0.5 rounded"
             />
-            <span>
+            <span className="text-foreground leading-snug">
               I understand that submissions may be edited for length, clarity,
               and style. *
             </span>
@@ -289,7 +293,7 @@ export default function SubmitOpinionPage() {
         </div>
 
         {serverError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+          <div className="bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-lg text-sm">
             {serverError}
           </div>
         )}
@@ -297,7 +301,7 @@ export default function SubmitOpinionPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-header-bg text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="w-full bg-[#0f172a] text-white py-3.5 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 text-sm"
         >
           {isSubmitting ? "Submitting..." : "Submit for Review"}
         </button>

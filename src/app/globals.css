@@ -2,12 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #1e293b;
   --header-bg: #0f172a;
-  --accent: #dc2626;
-  --link: #1e40af;
+  --accent: #b91c1c;
+  --link: #1d4ed8;
   --muted: #64748b;
-  --border: #e2e8f0;
+  --border: #f1f5f9;
   --card-bg: #ffffff;
   --section-bg: #f8fafc;
 }
@@ -30,10 +30,22 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: var(--link);
+}
+
+/* Typography scale */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+p {
+  line-height: 1.65;
 }
 
 .line-clamp-2 {
@@ -48,4 +60,13 @@ a {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Card shadow utility */
+.card-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-shadow-hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

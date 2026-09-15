@@ -31,13 +31,13 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-[calc(100vh-140px)]">
       {/* Sidebar */}
-      <aside className="w-56 bg-gray-900 text-white shrink-0">
-        <div className="p-4 border-b border-gray-700">
-          <h2 className="font-bold text-sm uppercase tracking-wider text-gray-400">
+      <aside className="w-56 bg-[#0f172a] text-white shrink-0">
+        <div className="px-4 py-4 border-b border-white/10">
+          <h2 className="font-bold text-xs uppercase tracking-widest text-gray-500">
             Admin Panel
           </h2>
         </div>
-        <nav className="p-2">
+        <nav className="p-2 space-y-0.5">
           {NAV.map((item) => {
             const active =
               pathname === item.href ||
@@ -47,10 +47,10 @@ export default function AdminLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2.5 rounded text-sm no-underline transition-colors",
+                  "flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm no-underline transition-colors",
                   active
-                    ? "bg-gray-700 text-white"
-                    : "text-gray-400 hover:text-white hover:bg-gray-800"
+                    ? "bg-white/10 text-white font-medium"
+                    : "text-gray-500 hover:text-gray-300 hover:bg-white/5"
                 )}
               >
                 <item.icon className="w-4 h-4" />
@@ -58,18 +58,20 @@ export default function AdminLayout({
               </Link>
             );
           })}
-          <button
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="flex items-center gap-2 px-3 py-2.5 rounded text-sm text-gray-400 hover:text-white hover:bg-gray-800 w-full mt-4"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
+          <div className="pt-4 mt-4 border-t border-white/10">
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm text-gray-500 hover:text-gray-300 hover:bg-white/5 w-full transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
         </nav>
       </aside>
 
       {/* Main */}
-      <div className="flex-1 bg-gray-50 p-6 overflow-auto">{children}</div>
+      <div className="flex-1 bg-gray-50/80 p-8 overflow-auto">{children}</div>
     </div>
   );
 }

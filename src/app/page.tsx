@@ -105,23 +105,23 @@ export default async function HomePage() {
     <>
       <BreakingBanner articles={breakingArticles} />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-10">
         {featuredArticle && (
-          <section className="mb-10">
+          <section className="mb-12">
             <ArticleCardFeatured article={featuredArticle} />
           </section>
         )}
 
         {secondaryArticles.length > 0 && (
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
             {secondaryArticles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </section>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2 space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-2 space-y-14">
             <section>
               <SectionHeader title="Latest News" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -170,24 +170,24 @@ export default async function HomePage() {
             {publishedOpinions.length > 0 && (
               <section>
                 <SectionHeader title="Opinion" href="/opinion" />
-                <div className="space-y-4">
+                <div className="space-y-0">
                   {publishedOpinions.map((op) => (
                     <article
                       key={op.id}
-                      className="border-b border-border pb-4"
+                      className="border-b border-gray-100 py-4 first:pt-0 last:border-0"
                     >
-                      <span className="text-xs font-semibold uppercase text-muted">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                         {op.type === "EDITORIAL" ? "Editorial" : "Letter"}
                       </span>
-                      <h3 className="font-bold text-lg mt-1">
+                      <h3 className="font-bold text-base mt-1 text-[#0f172a]">
                         <Link
                           href={`/opinion/${op.slug}`}
-                          className="text-foreground hover:text-link no-underline"
+                          className="text-[#0f172a] hover:text-link no-underline transition-colors"
                         >
                           {op.headline}
                         </Link>
                       </h3>
-                      <p className="text-sm text-muted mt-1">
+                      <p className="text-sm text-gray-400 mt-1">
                         By {op.firstName} {op.lastName}
                         {op.city ? `, ${op.city}` : ""}
                       </p>
@@ -198,7 +198,7 @@ export default async function HomePage() {
             )}
           </div>
 
-          <aside className="space-y-8">
+          <aside className="space-y-10">
             <div>
               <SectionHeader title="Most Read" />
               <div>

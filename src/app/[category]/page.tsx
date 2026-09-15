@@ -71,14 +71,14 @@ export default async function CategoryPage({
   const totalPages = Math.ceil(total / perPage);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-10">
       <SectionHeader title={category.name} />
       {category.description && (
-        <p className="text-muted mb-8">{category.description}</p>
+        <p className="text-muted mb-8 -mt-2 max-w-2xl">{category.description}</p>
       )}
 
       {articles.length === 0 ? (
-        <p className="text-muted text-center py-12">
+        <p className="text-gray-400 text-center py-16">
           No articles found in this category yet.
         </p>
       ) : (
@@ -90,22 +90,22 @@ export default async function CategoryPage({
           </div>
 
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-10">
+            <div className="flex justify-center items-center gap-3 mt-12">
               {page > 1 && (
                 <a
                   href={`/${slug}?page=${page - 1}`}
-                  className="px-4 py-2 border border-border rounded hover:bg-gray-50 no-underline text-foreground"
+                  className="px-5 py-2.5 border border-gray-200 rounded-lg hover:bg-gray-50 no-underline text-foreground text-sm font-medium transition-colors"
                 >
                   Previous
                 </a>
               )}
-              <span className="px-4 py-2 text-muted">
+              <span className="px-4 py-2 text-sm text-gray-400">
                 Page {page} of {totalPages}
               </span>
               {page < totalPages && (
                 <a
                   href={`/${slug}?page=${page + 1}`}
-                  className="px-4 py-2 border border-border rounded hover:bg-gray-50 no-underline text-foreground"
+                  className="px-5 py-2.5 border border-gray-200 rounded-lg hover:bg-gray-50 no-underline text-foreground text-sm font-medium transition-colors"
                 >
                   Next
                 </a>

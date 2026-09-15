@@ -32,22 +32,26 @@ export default function LoginPage() {
   }
 
   const inputClass =
-    "w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-link bg-white";
+    "w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent bg-white text-foreground text-sm transition-shadow";
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Lock className="w-10 h-10 mx-auto mb-3 text-muted" />
-          <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-sm text-muted mt-1">
+          <div className="w-14 h-14 rounded-full bg-section-bg flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-6 h-6 text-gray-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-[#0f172a]">Admin Login</h1>
+          <p className="text-sm text-gray-400 mt-1.5">
             Sign in to access the admin dashboard
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1.5 text-foreground">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -58,7 +62,9 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1.5 text-foreground">
+              Password
+            </label>
             <input
               type="password"
               value={password}
@@ -76,7 +82,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-header-bg text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="w-full bg-[#0f172a] text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 text-sm"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>

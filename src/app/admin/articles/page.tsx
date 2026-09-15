@@ -37,80 +37,85 @@ export default async function AdminArticlesPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Articles ({total})</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold text-[#0f172a]">
+          Articles{" "}
+          <span className="text-gray-400 font-normal text-lg">({total})</span>
+        </h1>
       </div>
 
       {/* Search */}
-      <form className="mb-4">
+      <form className="mb-6">
         <input
           type="text"
           name="q"
           defaultValue={q || ""}
           placeholder="Search articles..."
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full max-w-md px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent text-sm bg-white"
         />
       </form>
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg card-shadow overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50/80 border-b border-gray-100">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">
+              <th className="text-left px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Title
               </th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">
+              <th className="text-left px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Source
               </th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">
+              <th className="text-left px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Category
               </th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">
+              <th className="text-left px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Date
               </th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">
+              <th className="text-right px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Views
               </th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">
+              <th className="text-right px-4 py-3 font-medium text-gray-400 text-xs uppercase tracking-wide">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-50">
             {articles.map((article) => (
-              <tr key={article.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 max-w-xs">
+              <tr key={article.id} className="hover:bg-gray-50/50 transition-colors">
+                <td className="px-4 py-3.5 max-w-xs">
                   <div className="flex items-center gap-2">
                     {article.isBreaking && (
-                      <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-accent shrink-0" />
                     )}
                     {article.isFeatured && (
-                      <span className="w-2 h-2 rounded-full bg-yellow-500 shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
                     )}
-                    <span className="truncate font-medium">{article.title}</span>
+                    <span className="truncate font-medium text-[#0f172a]">
+                      {article.title}
+                    </span>
                     {article.isHidden && (
-                      <span className="text-xs bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium uppercase tracking-wide">
                         hidden
                       </span>
                     )}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-gray-600">
+                <td className="px-4 py-3.5 text-gray-500">
                   {article.source.name}
                 </td>
-                <td className="px-4 py-3 text-gray-600">
+                <td className="px-4 py-3.5 text-gray-500">
                   {article.category?.name || "-"}
                 </td>
-                <td className="px-4 py-3 text-gray-600">
+                <td className="px-4 py-3.5 text-gray-500 tabular-nums">
                   {formatDate(article.publishedAt)}
                 </td>
-                <td className="px-4 py-3 text-right text-gray-600">
+                <td className="px-4 py-3.5 text-right text-gray-500 tabular-nums">
                   {article.viewCount}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3.5 text-right">
                   <Link
                     href={`/admin/articles/${article.id}/edit`}
-                    className="text-blue-600 hover:underline text-sm no-underline"
+                    className="text-link hover:underline text-sm no-underline font-medium"
                   >
                     Edit
                   </Link>
@@ -122,22 +127,22 @@ export default async function AdminArticlesPage({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center items-center gap-3 mt-8">
           {page > 1 && (
             <a
               href={`/admin/articles?page=${page - 1}${q ? `&q=${q}` : ""}`}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 no-underline text-gray-700"
+              className="px-5 py-2.5 border border-gray-200 rounded-lg hover:bg-gray-50 no-underline text-foreground text-sm font-medium transition-colors"
             >
               Previous
             </a>
           )}
-          <span className="px-4 py-2 text-gray-500">
+          <span className="px-4 py-2 text-sm text-gray-400">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <a
               href={`/admin/articles?page=${page + 1}${q ? `&q=${q}` : ""}`}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 no-underline text-gray-700"
+              className="px-5 py-2.5 border border-gray-200 rounded-lg hover:bg-gray-50 no-underline text-foreground text-sm font-medium transition-colors"
             >
               Next
             </a>

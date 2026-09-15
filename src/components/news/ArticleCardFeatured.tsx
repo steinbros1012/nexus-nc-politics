@@ -19,14 +19,14 @@ export default function ArticleCardFeatured({
   article,
 }: ArticleCardFeaturedProps) {
   return (
-    <article className="group relative bg-card-bg border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+    <article className="group relative bg-white rounded-lg overflow-hidden card-shadow hover:card-shadow-hover transition-shadow duration-200">
       {article.imageUrl ? (
         <Link href={`/article/${article.slug}`}>
-          <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-gray-100">
+          <div className="aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-gray-50">
             <img
               src={article.imageUrl}
               alt=""
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
             />
           </div>
         </Link>
@@ -44,11 +44,11 @@ export default function ArticleCardFeatured({
             />
             {/* NC wordmark / publication badge */}
             <div className="relative z-10 text-center px-8">
-              <div className="text-white/20 text-8xl font-black tracking-tighter leading-none select-none mb-4">
+              <div className="text-white/15 text-8xl font-black tracking-tighter leading-none select-none mb-4">
                 NC
               </div>
-              <div className="w-16 h-px bg-[#dc2626] mx-auto mb-4" />
-              <p className="text-white/40 text-xs font-semibold uppercase tracking-widest">
+              <div className="w-16 h-px bg-accent mx-auto mb-4" />
+              <p className="text-white/35 text-xs font-semibold uppercase tracking-widest">
                 North Carolina Politics
               </p>
             </div>
@@ -57,10 +57,10 @@ export default function ArticleCardFeatured({
           </div>
         </Link>
       )}
-      <div className="p-6">
+      <div className="p-6 md:p-8">
         <div className="flex items-center gap-2 mb-3">
           {article.isBreaking && (
-            <span className="bg-accent text-white text-xs font-bold px-2.5 py-1 rounded uppercase animate-pulse">
+            <span className="bg-accent text-white text-[10px] font-bold px-2.5 py-1 rounded uppercase tracking-wide">
               Breaking News
             </span>
           )}
@@ -71,23 +71,25 @@ export default function ArticleCardFeatured({
             />
           )}
         </div>
-        <h2 className="font-bold text-2xl md:text-3xl leading-tight mb-3">
+        <h2 className="font-extrabold text-2xl md:text-[2rem] leading-tight mb-3 text-[#0f172a] tracking-tight">
           <Link
             href={`/article/${article.slug}`}
-            className="text-foreground hover:text-link no-underline transition-colors"
+            className="text-[#0f172a] hover:text-link no-underline transition-colors"
           >
             {article.title}
           </Link>
         </h2>
         {article.summary && (
-          <p className="text-muted text-base line-clamp-3 mb-4">
+          <p className="text-muted text-base md:text-lg line-clamp-3 mb-5 leading-relaxed">
             {article.summary}
           </p>
         )}
         <div className="flex items-center gap-3 text-sm text-muted">
-          <span className="font-medium">{article.source.name}</span>
-          <span>&middot;</span>
-          <time>{formatRelativeTime(article.publishedAt)}</time>
+          <span className="uppercase tracking-wide font-medium text-[11px] text-gray-400">
+            {article.source.name}
+          </span>
+          <span className="text-gray-300">&middot;</span>
+          <time className="text-gray-400">{formatRelativeTime(article.publishedAt)}</time>
         </div>
       </div>
     </article>

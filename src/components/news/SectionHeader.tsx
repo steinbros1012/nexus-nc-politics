@@ -13,12 +13,17 @@ export default function SectionHeader({
   linkText = "See All",
 }: SectionHeaderProps) {
   return (
-    <div className="flex items-center justify-between border-b-2 border-header-bg pb-2 mb-6">
-      <h2 className="text-xl font-bold text-foreground">{title}</h2>
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center gap-3">
+        <div className="w-1 h-5 bg-accent rounded-full" />
+        <h2 className="text-lg font-bold text-[#0f172a] uppercase tracking-wide">
+          {title}
+        </h2>
+      </div>
       {href && (
         <Link
           href={href}
-          className="flex items-center gap-1 text-sm text-link hover:underline no-underline font-medium"
+          className="flex items-center gap-0.5 text-sm text-link hover:underline no-underline font-medium"
         >
           {linkText}
           <ChevronRight className="w-4 h-4" />

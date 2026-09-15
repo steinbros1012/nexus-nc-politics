@@ -37,19 +37,19 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="bg-header-bg text-white rounded-lg p-8">
+    <section className="bg-[#0f172a] text-white rounded-lg p-7">
       <div className="max-w-xl mx-auto text-center">
-        <Mail className="w-10 h-10 mx-auto mb-4 text-gray-400" />
-        <h3 className="text-xl font-bold mb-2">
+        <Mail className="w-8 h-8 mx-auto mb-3 text-gray-500" />
+        <h3 className="text-lg font-bold mb-1.5 tracking-tight">
           Stay Up to Date on NC Politics
         </h3>
-        <p className="text-gray-400 text-sm mb-6">
+        <p className="text-gray-500 text-sm mb-5 leading-relaxed">
           Get the most important North Carolina political news delivered to your
           inbox.
         </p>
 
         {status === "success" ? (
-          <p className="text-green-400 font-medium">{message}</p>
+          <p className="text-green-400 font-medium text-sm">{message}</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
@@ -58,12 +58,12 @@ export default function NewsletterSignup() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="flex-1 px-4 py-2.5 rounded bg-gray-800 border border-gray-600 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-accent"
+              className="flex-1 px-4 py-2.5 rounded bg-white/10 border border-gray-700 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent text-sm"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="px-6 py-2.5 bg-accent hover:bg-red-700 rounded font-medium transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 bg-link hover:bg-blue-700 rounded font-medium transition-colors disabled:opacity-50 text-sm"
             >
               {status === "loading" ? "..." : "Subscribe"}
             </button>

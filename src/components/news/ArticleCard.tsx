@@ -17,23 +17,23 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <article className="group bg-card-bg border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+    <article className="group bg-white rounded-lg overflow-hidden card-shadow hover:card-shadow-hover transition-shadow duration-200">
       {article.imageUrl && (
         <Link href={`/article/${article.slug}`}>
-          <div className="aspect-video overflow-hidden bg-gray-100">
+          <div className="aspect-video overflow-hidden bg-gray-50">
             <img
               src={article.imageUrl}
               alt=""
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
               loading="lazy"
             />
           </div>
         </Link>
       )}
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="p-5">
+        <div className="flex items-center gap-2 mb-2.5">
           {article.isBreaking && (
-            <span className="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded uppercase">
+            <span className="bg-accent text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">
               Breaking
             </span>
           )}
@@ -44,22 +44,24 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             />
           )}
         </div>
-        <h3 className="font-bold text-lg leading-tight mb-2">
+        <h3 className="font-bold text-[1.05rem] leading-snug mb-2 text-[#0f172a]">
           <Link
             href={`/article/${article.slug}`}
-            className="text-foreground hover:text-link no-underline transition-colors"
+            className="text-[#0f172a] hover:text-link no-underline transition-colors"
           >
             {article.title}
           </Link>
         </h3>
         {article.summary && (
-          <p className="text-muted text-sm line-clamp-2 mb-3">
+          <p className="text-muted text-sm line-clamp-2 mb-3 leading-relaxed">
             {article.summary}
           </p>
         )}
-        <div className="flex items-center justify-between text-xs text-muted">
-          <span>{article.source.name}</span>
-          <time>{formatRelativeTime(article.publishedAt)}</time>
+        <div className="flex items-center justify-between text-xs text-muted pt-2 border-t border-gray-100">
+          <span className="uppercase tracking-wide font-medium text-[10px] text-gray-400">
+            {article.source.name}
+          </span>
+          <time className="text-gray-400">{formatRelativeTime(article.publishedAt)}</time>
         </div>
       </div>
     </article>

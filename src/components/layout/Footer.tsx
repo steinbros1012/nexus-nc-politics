@@ -6,13 +6,13 @@ const PUBLICATION_NAME =
 export default function Footer() {
   return (
     <footer className="bg-header-bg text-gray-400 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
-            <h3 className="text-white font-bold text-lg mb-3">
+            <h3 className="text-white font-extrabold text-lg mb-3 tracking-tight">
               {PUBLICATION_NAME}
             </h3>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed text-gray-500">
               Comprehensive coverage of North Carolina politics, policy, and
               government. Aggregating news from across the state to keep you
               informed.
@@ -20,14 +20,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-3">
+            <h4 className="text-gray-300 font-semibold text-xs uppercase tracking-widest mb-4">
               Sections
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
                   href="/politics"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Politics
                 </Link>
@@ -35,7 +35,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/elections"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Elections
                 </Link>
@@ -43,7 +43,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legislature"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Legislature
                 </Link>
@@ -51,7 +51,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/government"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Government
                 </Link>
@@ -59,7 +59,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/opinion"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Opinion
                 </Link>
@@ -68,14 +68,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-3">
+            <h4 className="text-gray-300 font-semibold text-xs uppercase tracking-widest mb-4">
               About
             </h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   About Us
                 </Link>
@@ -83,7 +83,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/editorial-policy"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Editorial Policy
                 </Link>
@@ -91,7 +91,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Contact
                 </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/submit-opinion"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Submit an Opinion
                 </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/letters"
-                  className="hover:text-white transition-colors no-underline text-gray-400"
+                  className="hover:text-white transition-colors no-underline text-gray-500"
                 >
                   Letters to the Editor
                 </Link>
@@ -116,27 +116,27 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-3">
+            <h4 className="text-gray-300 font-semibold text-xs uppercase tracking-widest mb-4">
               Stay Informed
             </h4>
-            <p className="text-sm mb-3">
+            <p className="text-sm mb-4 text-gray-500">
               Get the latest NC political news delivered to your inbox.
             </p>
             <Link
               href="/search"
-              className="text-sm hover:text-white transition-colors no-underline text-gray-400"
+              className="text-sm hover:text-white transition-colors no-underline text-gray-500"
             >
               Search Articles
             </Link>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-xs">
+        <div className="border-t border-gray-800 mt-10 pt-8 text-center text-xs text-gray-600">
           <p>
             &copy; {new Date().getFullYear()} {PUBLICATION_NAME}. A product of
             Nexus Strategies. All rights reserved.
           </p>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2">
             {PUBLICATION_NAME} aggregates news from multiple sources. Original
             content remains the property of its respective publishers.
           </p>
