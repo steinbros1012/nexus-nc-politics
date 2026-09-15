@@ -26,7 +26,7 @@ export default function Header() {
       {/* Top bar — masthead */}
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" style={{ color: 'white', textDecoration: 'none' }}>
-          <h1 className="text-2xl md:text-[1.75rem] font-extrabold tracking-tight leading-none text-white">
+          <h1 className="text-2xl md:text-[1.75rem] font-extrabold tracking-tight leading-none" style={{ color: 'white' }}>
             {PUBLICATION_NAME}
           </h1>
           <p className="text-[11px] text-white/50 tracking-widest uppercase mt-0.5 font-medium">

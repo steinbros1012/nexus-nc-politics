@@ -39,9 +39,8 @@ a:not([class*="text-"]):not([style*="color"]) {
   color: var(--link);
 }
 
-/* Typography scale */
+/* Typography scale — no color override, let components control it */
 h1, h2, h3, h4, h5, h6 {
-  color: #0f172a;
   letter-spacing: -0.01em;
 }
 
