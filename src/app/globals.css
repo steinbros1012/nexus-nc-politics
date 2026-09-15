@@ -34,7 +34,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* Only color plain <a> tags — Tailwind color utilities take precedence */
+a:not([class*="text-"]):not([style*="color"]) {
   color: var(--link);
 }
 

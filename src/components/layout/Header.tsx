@@ -25,11 +25,11 @@ export default function Header() {
     <header className="bg-header-bg text-white sticky top-0 z-50">
       {/* Top bar — masthead */}
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-white no-underline">
-          <h1 className="text-2xl md:text-[1.75rem] font-extrabold tracking-tight leading-none">
+        <Link href="/" style={{ color: 'white', textDecoration: 'none' }}>
+          <h1 className="text-2xl md:text-[1.75rem] font-extrabold tracking-tight leading-none text-white">
             {PUBLICATION_NAME}
           </h1>
-          <p className="text-[11px] text-gray-400 tracking-wide uppercase mt-0.5 font-medium">
+          <p className="text-[11px] text-white/50 tracking-widest uppercase mt-0.5 font-medium">
             North Carolina Political News &amp; Analysis
           </p>
         </Link>
