@@ -31,10 +31,24 @@ export default async function HomePage() {
       orderBy: { publishedAt: "desc" },
       take: 3,
     }),
+    // Prefer featured + has image, then featured, then just latest with image, then latest
     prisma.article.findFirst({
-      where: { isHidden: false },
+      where: { isHidden: false, isFeatured: true, NOT: { imageUrl: null } },
       include: articleInclude,
-      orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+      orderBy: { publishedAt: "desc" },
+    }).then(async (a) => {
+      if (a) return a
+      const withImage = await prisma.article.findFirst({
+        where: { isHidden: false, NOT: { imageUrl: null } },
+        include: articleInclude,
+        orderBy: { publishedAt: "desc" },
+      })
+      if (withImage) return withImage
+      return prisma.article.findFirst({
+        where: { isHidden: false },
+        include: articleInclude,
+        orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+      })
     }),
     prisma.article.findMany({
       where: { isHidden: false },

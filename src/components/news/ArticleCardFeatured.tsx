@@ -31,7 +31,31 @@ export default function ArticleCardFeatured({
           </div>
         </Link>
       ) : (
-        <div className="aspect-[16/9] md:aspect-[21/9] bg-gradient-to-br from-header-bg to-gray-700" />
+        <Link href={`/article/${article.slug}`}>
+          <div className="aspect-[16/9] md:aspect-[21/9] relative overflow-hidden bg-[#0f172a] flex items-center justify-center">
+            {/* Subtle grid pattern */}
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
+            />
+            {/* NC wordmark / publication badge */}
+            <div className="relative z-10 text-center px-8">
+              <div className="text-white/20 text-8xl font-black tracking-tighter leading-none select-none mb-4">
+                NC
+              </div>
+              <div className="w-16 h-px bg-[#dc2626] mx-auto mb-4" />
+              <p className="text-white/40 text-xs font-semibold uppercase tracking-widest">
+                North Carolina Politics
+              </p>
+            </div>
+            {/* Bottom gradient for text legibility */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f172a] to-transparent" />
+          </div>
+        </Link>
       )}
       <div className="p-6">
         <div className="flex items-center gap-2 mb-3">
