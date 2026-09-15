@@ -18,8 +18,8 @@ interface ArticleCardProps {
 export default function ArticleCard({ article }: ArticleCardProps) {
   return (
     <article className="group bg-white rounded-lg overflow-hidden card-shadow hover:card-shadow-hover transition-shadow duration-200">
-      {article.imageUrl && (
-        <Link href={`/article/${article.slug}`}>
+      <Link href={`/article/${article.slug}`}>
+        {article.imageUrl ? (
           <div className="aspect-video overflow-hidden bg-gray-50">
             <img
               src={article.imageUrl}
@@ -28,8 +28,19 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               loading="lazy"
             />
           </div>
-        </Link>
-      )}
+        ) : (
+          <div
+            className="aspect-video overflow-hidden relative flex items-center justify-center border-t-2 border-[#b91c1c]"
+            style={{
+              background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+            }}
+          >
+            <span className="text-white/10 text-3xl font-black tracking-tight text-center px-6 select-none leading-tight">
+              {article.source.name}
+            </span>
+          </div>
+        )}
+      </Link>
       <div className="p-5">
         <div className="flex items-center gap-2 mb-2.5">
           {article.isBreaking && (

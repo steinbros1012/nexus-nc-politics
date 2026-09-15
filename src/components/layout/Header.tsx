@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Search, PenLine } from "lucide-react";
+import { Menu, X, Search, PenLine, ChevronRight } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Latest", href: "/" },
@@ -50,7 +50,8 @@ export default function Header() {
             Submit Opinion
           </Link>
           <button
-            className="md:hidden text-gray-400 hover:text-white"
+            className="md:hidden text-gray-400 hover:text-white flex items-center justify-center"
+            style={{ width: 44, height: 44 }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -82,32 +83,36 @@ export default function Header() {
       </nav>
 
       {/* Mobile nav */}
-      {mobileOpen && (
-        <nav className="md:hidden border-t border-gray-700/60 bg-header-bg">
-          <ul className="divide-y divide-gray-800">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="block px-4 py-3.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 no-underline font-medium"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-            <li>
+      <nav
+        className={`md:hidden border-t border-gray-700/60 bg-header-bg overflow-hidden transition-all duration-200 ${
+          mobileOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <ul className="divide-y divide-gray-800">
+          {NAV_ITEMS.map((item) => (
+            <li key={item.href}>
               <Link
-                href="/submit-opinion"
-                className="block px-4 py-3.5 text-sm text-gray-300 font-medium no-underline hover:text-white"
+                href={item.href}
+                className="flex items-center justify-between px-4 py-3.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 no-underline font-medium"
                 onClick={() => setMobileOpen(false)}
               >
-                Submit Opinion
+                {item.label}
+                <ChevronRight className="w-4 h-4 text-gray-600" />
               </Link>
             </li>
-          </ul>
-        </nav>
-      )}
+          ))}
+          <li className="px-4 py-4">
+            <Link
+              href="/submit-opinion"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded bg-red-900/40 border border-red-800/50 text-sm text-white font-semibold no-underline hover:bg-red-900/60 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              <PenLine className="w-4 h-4" />
+              Submit Opinion
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </header>
   );
 }

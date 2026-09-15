@@ -80,13 +80,17 @@ export default async function HomePage() {
     prisma.article.findMany({
       where: { isHidden: false },
       include: articleInclude,
-      orderBy: { viewCount: "desc" },
+      orderBy: [
+        { isFeatured: "desc" },
+        { isEditorsPick: "desc" },
+        { publishedAt: "desc" },
+      ],
       take: 5,
     }),
     prisma.opinionSubmission.findMany({
       where: { status: "PUBLISHED" },
       orderBy: { publishedAt: "desc" },
-      take: 3,
+      take: 6,
     }),
   ]);
 
@@ -174,10 +178,20 @@ export default async function HomePage() {
                   {publishedOpinions.map((op) => (
                     <article
                       key={op.id}
-                      className="border-b border-gray-100 py-4 first:pt-0 last:border-0"
+                      className={`border-b border-gray-100 py-4 first:pt-0 last:border-0 pl-4 hover:bg-gray-50 transition-colors rounded-r ${
+                        op.type === "EDITORIAL"
+                          ? "border-l-2 border-l-[#b91c1c]"
+                          : "border-l-2 border-l-gray-300"
+                      }`}
                     >
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
-                        {op.type === "EDITORIAL" ? "Editorial" : "Letter"}
+                      <span
+                        className={`text-[10px] font-semibold uppercase tracking-wider ${
+                          op.type === "EDITORIAL"
+                            ? "text-[#b91c1c]"
+                            : "text-gray-400"
+                        }`}
+                      >
+                        {op.type === "EDITORIAL" ? "Opinion" : "Letter"}
                       </span>
                       <h3 className="font-bold text-base mt-1 text-[#0f172a]">
                         <Link
@@ -200,15 +214,20 @@ export default async function HomePage() {
 
           <aside className="space-y-10">
             <div>
-              <SectionHeader title="Most Read" />
+              <SectionHeader title="Editor's Picks" />
               <div>
-                {mostViewed.map((article, i) => (
-                  <ArticleCardSmall
-                    key={article.id}
-                    article={article}
-                    index={i}
-                  />
-                ))}
+                {mostViewed.map((article, i) => {
+                  const publishedDate = new Date(article.publishedAt);
+                  const isNew = Date.now() - publishedDate.getTime() < 48 * 60 * 60 * 1000;
+                  return (
+                    <ArticleCardSmall
+                      key={article.id}
+                      article={article}
+                      index={i}
+                      isNew={isNew}
+                    />
+                  );
+                })}
               </div>
             </div>
             <NewsletterSignup />
