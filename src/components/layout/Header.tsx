@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { label: "Legislature", href: "/legislature" },
   { label: "Government", href: "/government" },
   { label: "Courts", href: "/courts" },
-  { label: "Local", href: "/local" },
   { label: "Opinion", href: "/opinion" },
 ];
 
