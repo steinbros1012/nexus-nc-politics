@@ -133,8 +133,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-10 pt-8 text-center text-xs text-gray-600">
           <p>
-            &copy; {new Date().getFullYear()} {PUBLICATION_NAME}. A product of
-            Nexus Strategies. All rights reserved.
+            &copy; {new Date().getFullYear()} {PUBLICATION_NAME}. All rights reserved.
           </p>
           <p className="mt-2">
             {PUBLICATION_NAME} aggregates news from multiple sources. Original

@@ -47,12 +47,12 @@ export default function AboutPage() {
           </li>
         </ul>
 
-        <h2>A Product of Nexus Strategies</h2>
+        <h2>Our Independence</h2>
         <p>
-          {PUBLICATION_NAME} is produced by Nexus Strategies, a North
-          Carolina-based organization committed to civic engagement and
-          political awareness. We are not affiliated with any political party,
-          candidate, or special interest group.
+          {PUBLICATION_NAME} is an independent publication. We are not
+          affiliated with any political party, candidate, campaign, or special
+          interest group. Our coverage is driven by what matters to North
+          Carolinians, not by any outside agenda.
         </p>
 
         <h2>Source Attribution</h2>
