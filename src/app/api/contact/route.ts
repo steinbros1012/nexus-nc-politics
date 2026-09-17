@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import { rateLimit } from "@/lib/rateLimit";
 
 const contactSchema = z.object({
   name: z.string().min(1).max(100),
@@ -42,6 +43,9 @@ async function sendEmail(name: string, email: string, subject: string, message: 
 }
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "contact", 5, 15 * 60 * 1000); // 5 per 15 min
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const data = contactSchema.parse(body);

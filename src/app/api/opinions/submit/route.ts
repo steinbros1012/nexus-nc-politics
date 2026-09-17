@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
+import { rateLimit } from "@/lib/rateLimit";
 
 const opinionSchema = z.object({
   type: z.enum(["EDITORIAL", "LETTER"]),
@@ -23,6 +24,9 @@ const opinionSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "opinions", 3, 60 * 60 * 1000); // 3 per hour
+  if (limited) return limited;
+
   try {
     const body = await req.json();
     const data = opinionSchema.parse(body);
