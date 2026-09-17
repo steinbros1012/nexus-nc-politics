@@ -139,6 +139,14 @@ export default function Footer() {
             {PUBLICATION_NAME} aggregates news from multiple sources. Original
             content remains the property of its respective publishers.
           </p>
+          <p className="mt-4">
+            <Link
+              href="/admin"
+              className="text-gray-700 hover:text-gray-400 transition-colors no-underline"
+            >
+              Admin
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
