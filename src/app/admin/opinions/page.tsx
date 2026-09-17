@@ -4,105 +4,122 @@ import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+  SUBMITTED:          { label: "Submitted",         color: "#1d4ed8", bg: "#eff6ff" },
+  UNDER_REVIEW:       { label: "Under Review",      color: "#7c3aed", bg: "#f5f3ff" },
+  CHANGES_REQUESTED:  { label: "Changes Requested", color: "#b45309", bg: "#fffbeb" },
+  APPROVED:           { label: "Approved",          color: "#065f46", bg: "#ecfdf5" },
+  PUBLISHED:          { label: "Published",         color: "#0f172a", bg: "#f1f5f9" },
+  REJECTED:           { label: "Rejected",          color: "#b91c1c", bg: "#fef2f2" },
+};
+
 export default async function AdminOpinionsPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
   const { status: statusFilter } = await searchParams;
-
-  const statusTabs = [
-    { label: "Submitted", value: "SUBMITTED" },
-    { label: "Under Review", value: "UNDER_REVIEW" },
-    { label: "Changes Requested", value: "CHANGES_REQUESTED" },
-    { label: "Approved", value: "APPROVED" },
-    { label: "Published", value: "PUBLISHED" },
-    { label: "Rejected", value: "REJECTED" },
-  ];
-
   const currentStatus = statusFilter || "SUBMITTED";
 
-  const opinions = await prisma.opinionSubmission.findMany({
-    where: { status: currentStatus as never },
-    orderBy: { createdAt: "desc" },
-  });
+  const [opinions, counts] = await Promise.all([
+    prisma.opinionSubmission.findMany({
+      where: { status: currentStatus as never },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.opinionSubmission.groupBy({ by: ["status"], _count: true }),
+  ]);
 
-  const counts = await prisma.opinionSubmission.groupBy({
-    by: ["status"],
-    _count: true,
-  });
-
-  const countMap = Object.fromEntries(
-    counts.map((c) => [c.status, c._count])
-  );
+  const countMap = Object.fromEntries(counts.map((c) => [c.status, c._count]));
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Opinion Submissions</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-extrabold text-[#0f172a] tracking-tight">Opinion Submissions</h1>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Review, approve, and publish submitted editorials and letters.
+        </p>
+      </div>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-1 mb-6 bg-gray-100 p-1 rounded-lg">
-        {statusTabs.map((tab) => (
-          <a
-            key={tab.value}
-            href={`/admin/opinions?status=${tab.value}`}
-            className={`px-3 py-2 text-sm rounded no-underline transition-colors ${
-              currentStatus === tab.value
-                ? "bg-white text-gray-900 shadow-sm font-medium"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            {tab.label}{" "}
-            {countMap[tab.value] ? (
-              <span className="text-xs bg-gray-200 px-1.5 py-0.5 rounded-full ml-1">
-                {countMap[tab.value]}
+      {/* Status tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {Object.entries(STATUS_CONFIG).map(([val, cfg]) => {
+          const count = countMap[val] || 0;
+          const active = currentStatus === val;
+          return (
+            <a
+              key={val}
+              href={`/admin/opinions?status=${val}`}
+              className="no-underline"
+            >
+              <span
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+                style={
+                  active
+                    ? { background: cfg.color, color: "#fff" }
+                    : { background: "#fff", color: "#6b7280", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }
+                }
+              >
+                {cfg.label}
+                {count > 0 && (
+                  <span
+                    className="text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums"
+                    style={
+                      active
+                        ? { background: "rgba(255,255,255,0.25)", color: "#fff" }
+                        : { background: cfg.bg, color: cfg.color }
+                    }
+                  >
+                    {count}
+                  </span>
+                )}
               </span>
-            ) : null}
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
 
       {opinions.length === 0 ? (
-        <p className="text-gray-500 text-center py-12">
-          No {currentStatus.toLowerCase().replace("_", " ")} opinions.
-        </p>
+        <div className="bg-white rounded-2xl p-12 text-center" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <p className="text-gray-400 font-medium">No {STATUS_CONFIG[currentStatus]?.label.toLowerCase()} submissions.</p>
+        </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-100">
-          {opinions.map((op) => (
-            <div
-              key={op.id}
-              className="px-5 py-4 hover:bg-gray-50 flex items-start justify-between gap-4"
-            >
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className={`text-xs font-semibold uppercase px-2 py-0.5 rounded ${
-                      op.type === "EDITORIAL"
-                        ? "bg-purple-100 text-purple-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {op.type}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-gray-900">{op.headline}</h3>
-                <p className="text-sm text-gray-500 mt-1">
-                  {op.firstName} {op.lastName}
-                  {op.email ? ` (${op.email})` : ""}
-                  {op.city ? ` - ${op.city}, ${op.state}` : ""}
-                </p>
-                <p className="text-xs text-gray-400 mt-1">
-                  Submitted {formatDate(op.createdAt)}
-                </p>
-              </div>
-              <Link
-                href={`/admin/opinions/${op.id}/review`}
-                className="shrink-0 bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-blue-700 no-underline"
+        <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          {opinions.map((op, i) => {
+            const cfg = op.type === "EDITORIAL"
+              ? { label: "Editorial", color: "#7c3aed", bg: "#f5f3ff" }
+              : { label: "Letter", color: "#1d4ed8", bg: "#eff6ff" };
+            return (
+              <div
+                key={op.id}
+                className={`flex items-start justify-between gap-4 px-6 py-5 hover:bg-gray-50/60 transition-colors ${i !== 0 ? "border-t border-gray-100" : ""}`}
               >
-                Review
-              </Link>
-            </div>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+                      style={{ background: cfg.bg, color: cfg.color }}
+                    >
+                      {cfg.label}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-[#0f172a] mb-1 leading-snug">{op.headline}</h3>
+                  <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-xs text-gray-400">
+                    <span className="font-medium text-gray-600">{op.firstName} {op.lastName}</span>
+                    {op.email && <><span>&middot;</span><span>{op.email}</span></>}
+                    {op.city && <><span>&middot;</span><span>{op.city}, {op.state}</span></>}
+                    <span>&middot;</span>
+                    <span>Submitted {formatDate(op.createdAt)}</span>
+                  </div>
+                </div>
+                <Link
+                  href={`/admin/opinions/${op.id}/review`}
+                  className="shrink-0 inline-flex items-center px-4 py-2 bg-[#0f172a] text-white text-xs font-semibold rounded-xl hover:bg-gray-800 no-underline transition-colors"
+                >
+                  Review
+                </Link>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

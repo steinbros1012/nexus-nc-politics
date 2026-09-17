@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatDate } from "@/lib/utils";
+import { CheckCircle, XCircle, Loader2, Play, RefreshCw } from "lucide-react";
 
 interface LogEntry {
   id: string;
@@ -30,13 +31,16 @@ export default function IngestionPage() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [sources, setSources] = useState<SourceHealth[]>([]);
   const [ingesting, setIngesting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"success" | "error">("success");
 
   useEffect(() => {
     loadData();
   }, []);
 
   async function loadData() {
+    setLoading(true);
     try {
       const res = await fetch("/api/admin/ingest");
       const data = await res.json();
@@ -44,6 +48,9 @@ export default function IngestionPage() {
       setSources(data.sources || []);
     } catch {
       setMessage("Failed to load data.");
+      setMessageType("error");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -59,117 +66,169 @@ export default function IngestionPage() {
           0
         );
         setMessage(`Ingestion complete. ${total} new articles imported.`);
+        setMessageType("success");
         loadData();
       } else {
         setMessage(`Failed: ${data.error}`);
+        setMessageType("error");
       }
     } catch {
       setMessage("Network error.");
+      setMessageType("error");
     } finally {
       setIngesting(false);
     }
   }
 
+  const activeCount = sources.filter((s) => s.active && !s.hasError).length;
+  const errorCount = sources.filter((s) => s.hasError).length;
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Feed Ingestion</h1>
-        <button
-          onClick={triggerFullIngest}
-          disabled={ingesting}
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-        >
-          {ingesting ? "Ingesting..." : "Ingest All Sources"}
-        </button>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#0f172a] tracking-tight">Feed Ingestion</h1>
+          <p className="text-sm text-gray-400 mt-0.5">
+            {loading ? "Loading..." : (
+              <>
+                <span className="text-emerald-600 font-semibold">{activeCount} sources healthy</span>
+                {errorCount > 0 && <> &middot; <span className="text-red-500 font-semibold">{errorCount} errored</span></>}
+              </>
+            )}
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={loadData}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-[#0f172a] rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </button>
+          <button
+            onClick={triggerFullIngest}
+            disabled={ingesting}
+            className="inline-flex items-center gap-2 bg-[#0f172a] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+          >
+            {ingesting ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Ingesting...</>
+            ) : (
+              <><Play className="w-4 h-4" /> Run All Sources</>
+            )}
+          </button>
+        </div>
       </div>
 
       {message && (
         <div
-          className={`mb-6 p-4 rounded-lg text-sm ${
-            message.includes("complete")
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : "bg-red-50 text-red-700 border border-red-200"
+          className={`mb-6 flex items-center gap-3 p-4 rounded-xl text-sm font-medium ${
+            messageType === "success"
+              ? "bg-emerald-50 text-emerald-800 border border-emerald-100"
+              : "bg-red-50 text-red-800 border border-red-100"
           }`}
         >
+          {messageType === "success"
+            ? <CheckCircle className="w-4 h-4 shrink-0" />
+            : <XCircle className="w-4 h-4 shrink-0" />
+          }
           {message}
         </div>
       )}
 
-      {/* Source health */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5 mb-8">
-        <h2 className="font-bold text-lg mb-4">Source Health</h2>
-        <div className="space-y-3">
+      {/* Source health grid */}
+      <div className="bg-white rounded-2xl p-6 mb-6" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+        <h2 className="font-bold text-xs uppercase tracking-widest text-gray-400 mb-5">Source Health</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {sources.map((s) => (
             <div
               key={s.id}
-              className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+              className={`flex items-center justify-between p-3.5 rounded-xl border ${
+                s.hasError
+                  ? "border-red-100 bg-red-50/50"
+                  : s.active
+                  ? "border-gray-100 bg-gray-50/50"
+                  : "border-gray-100 bg-white opacity-60"
+              }`}
             >
               <div className="flex items-center gap-3">
-                <span
-                  className={`w-2.5 h-2.5 rounded-full ${
-                    s.hasError
-                      ? "bg-red-500"
-                      : s.active
-                        ? "bg-green-500"
-                        : "bg-gray-400"
-                  }`}
-                />
+                <div className={`w-2 h-2 rounded-full shrink-0 ${
+                  s.hasError ? "bg-red-500" : s.active ? "bg-emerald-500" : "bg-gray-300"
+                }`} />
                 <div>
-                  <span className="font-medium text-sm">{s.name}</span>
+                  <p className="font-semibold text-sm text-[#0f172a]">{s.name}</p>
                   {s.hasError && (
-                    <p className="text-xs text-red-500">{s.errorMessage}</p>
+                    <p className="text-xs text-red-500 mt-0.5">{s.errorMessage}</p>
+                  )}
+                  {!s.hasError && s.lastSuccessfulFetch && (
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      Last: {formatDate(s.lastSuccessfulFetch)}
+                    </p>
                   )}
                 </div>
               </div>
-              <div className="text-right text-sm text-gray-500">
-                <span>{s.articleCount} articles</span>
-                {s.lastSuccessfulFetch && (
-                  <p className="text-xs">
-                    Last: {formatDate(s.lastSuccessfulFetch)}
-                  </p>
-                )}
-              </div>
+              <span className="text-sm font-bold text-[#0f172a] tabular-nums">
+                {s.articleCount.toLocaleString()}
+                <span className="text-xs font-normal text-gray-400 ml-1">arts.</span>
+              </span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Logs */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5">
-        <h2 className="font-bold text-lg mb-4">Recent Ingestion Logs</h2>
+      <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+        <div className="px-6 py-4 border-b border-gray-100">
+          <h2 className="font-bold text-xs uppercase tracking-widest text-gray-400">Recent Ingestion Logs</h2>
+        </div>
         {logs.length === 0 ? (
-          <p className="text-gray-500 text-sm">No ingestion logs yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {logs.map((log) => (
-              <div
-                key={log.id}
-                className="flex items-start justify-between py-2 border-b border-gray-100 last:border-0 text-sm"
-              >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        log.status === "success"
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                      }`}
-                    />
-                    <span className="font-medium">{log.source.name}</span>
-                  </div>
-                  <p className="text-gray-500 text-xs mt-0.5">
-                    {log.status === "success"
-                      ? `+${log.articlesNew} new, ${log.articlesDupe} dupes, ${log.articlesErr} errors`
-                      : log.message}
-                  </p>
-                </div>
-                <div className="text-right text-xs text-gray-400">
-                  <p>{formatDate(log.createdAt)}</p>
-                  {log.duration && <p>{(log.duration / 1000).toFixed(1)}s</p>}
-                </div>
-              </div>
-            ))}
+          <div className="p-8 text-center">
+            <p className="text-gray-400 text-sm">No ingestion logs yet. Run an ingestion to get started.</p>
           </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50/60">
+                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-widest">Source</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-widest">Result</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-widest">Duration</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-widest">Date</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {logs.map((log) => (
+                <tr key={log.id} className="hover:bg-gray-50/60 transition-colors">
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-2">
+                      {log.status === "success" ? (
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      ) : (
+                        <XCircle className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                      )}
+                      <span className="font-semibold text-[#0f172a]">{log.source.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    {log.status === "success" ? (
+                      <span className="text-emerald-600 font-medium">
+                        +{log.articlesNew} new &middot; {log.articlesDupe} dupes
+                        {log.articlesErr > 0 && <> &middot; <span className="text-red-500">{log.articlesErr} err</span></>}
+                      </span>
+                    ) : (
+                      <span className="text-red-500 text-xs">{log.message}</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-3.5 text-right text-gray-400 tabular-nums text-xs">
+                    {log.duration ? `${(log.duration / 1000).toFixed(1)}s` : "—"}
+                  </td>
+                  <td className="px-5 py-3.5 text-right text-gray-400 text-xs tabular-nums whitespace-nowrap">
+                    {formatDate(log.createdAt)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
