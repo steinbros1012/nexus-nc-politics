@@ -145,13 +145,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       {/* Attribution notice */}
-      <div className="bg-blue-50/70 border border-blue-100 rounded-lg p-4 mb-8">
-        <p className="text-sm text-blue-800/80 leading-relaxed">
-          <strong>Source Attribution:</strong> This article was originally
-          published by{" "}
-          <strong>{article.source.name}</strong>. The summary below is
-          provided for informational purposes. Click the link below to read
-          the full story on the original publisher&apos;s website.
+      <div className="flex items-start gap-3 bg-[#f8fafc] border border-gray-100 rounded-lg px-4 py-3.5 mb-8">
+        <div className="w-1 h-full min-h-[1.5rem] bg-[#1d4ed8]/30 rounded-full shrink-0 self-stretch" />
+        <p className="text-sm text-gray-500 leading-relaxed">
+          Originally published by{" "}
+          <span className="font-semibold text-[#0f172a]">{article.source.name}</span>.
+          {" "}The summary below is provided for informational purposes.
+          Read the full article on their website.
         </p>
       </div>
 

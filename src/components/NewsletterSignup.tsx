@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Mail } from "lucide-react";
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
@@ -37,42 +36,51 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="bg-[#0f172a] text-white rounded-lg p-7">
-      <div className="max-w-xl mx-auto text-center">
-        <Mail className="w-8 h-8 mx-auto mb-3 text-gray-500" />
-        <h3 className="text-lg font-bold mb-1.5 tracking-tight">
-          Stay Up to Date on NC Politics
-        </h3>
-        <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-          Get the most important North Carolina political news delivered to your
-          inbox.
-        </p>
-
-        {status === "success" ? (
-          <p className="text-green-400 font-medium text-sm">{message}</p>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="flex-1 px-4 py-2.5 rounded bg-white/10 border border-gray-700 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent text-sm"
-            />
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              className="px-5 py-2.5 bg-link hover:bg-blue-700 rounded font-medium transition-colors disabled:opacity-50 text-sm"
-            >
-              {status === "loading" ? "..." : "Subscribe"}
-            </button>
-          </form>
-        )}
-        {status === "error" && (
-          <p className="text-red-400 text-sm mt-2">{message}</p>
-        )}
+    <section className="bg-[#0f172a] text-white rounded-xl p-6 border border-white/5">
+      <div className="flex items-center gap-2 mb-1">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#b91c1c]" />
+        <span className="text-[10px] font-bold uppercase tracking-widest text-[#b91c1c]">
+          Newsletter
+        </span>
       </div>
+      <h3 className="text-base font-bold text-white mb-1.5 tracking-tight leading-snug">
+        Stay up to date on NC Politics
+      </h3>
+      <p className="text-gray-500 text-xs mb-4 leading-relaxed">
+        Get the most important North Carolina political news delivered to your inbox.
+      </p>
+
+      {status === "success" ? (
+        <div className="flex items-center gap-2 text-green-400 text-sm font-medium">
+          <div className="w-4 h-4 rounded-full bg-green-400/20 flex items-center justify-center shrink-0">
+            <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          {message}
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-2.5">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="w-full px-3.5 py-2.5 rounded-lg bg-white/8 border border-white/10 text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-link focus:border-transparent text-sm"
+          />
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="w-full py-2.5 bg-[#b91c1c] hover:bg-red-700 rounded-lg font-semibold transition-colors disabled:opacity-50 text-sm text-white"
+          >
+            {status === "loading" ? "Subscribing..." : "Subscribe"}
+          </button>
+        </form>
+      )}
+      {status === "error" && (
+        <p className="text-red-400 text-xs mt-2">{message}</p>
+      )}
     </section>
   );
 }
