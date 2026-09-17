@@ -194,8 +194,8 @@ export default async function AdminDashboard() {
             <Clock className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <p className="text-sm font-bold text-[#0f172a]">8:00 AM UTC</p>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Next Auto-Ingest</p>
+            <p className="text-sm font-bold text-[#0f172a]">Every 2 Hours</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Auto-Ingest Schedule</p>
           </div>
         </div>
       </div>
