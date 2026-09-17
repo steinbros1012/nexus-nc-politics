@@ -25,7 +25,7 @@ export default async function AdminArticlesPage({
         source: { select: { name: true } },
         category: { select: { name: true, slug: true } },
       },
-      orderBy: { publishedAt: "desc" },
+      orderBy: { viewCount: "desc" },
       skip: (page - 1) * perPage,
       take: perPage,
     }),
