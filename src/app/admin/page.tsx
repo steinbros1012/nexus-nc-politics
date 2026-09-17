@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Newspaper, MessageSquare, Rss, Eye } from "lucide-react";
+import { Newspaper, MessageSquare, Rss, Eye, Mail } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +11,7 @@ export default async function AdminDashboard() {
     activeSources,
     pendingOpinions,
     totalViews,
+    unreadMessages,
     recentArticles,
     recentLogs,
   ] = await Promise.all([
@@ -21,6 +22,7 @@ export default async function AdminDashboard() {
       where: { status: { in: ["SUBMITTED", "UNDER_REVIEW"] } },
     }),
     prisma.article.aggregate({ _sum: { viewCount: true } }),
+    prisma.contactMessage.count({ where: { read: false } }),
     prisma.article.findMany({
       orderBy: { createdAt: "desc" },
       take: 5,
@@ -58,13 +60,19 @@ export default async function AdminDashboard() {
       icon: Eye,
       href: "/admin/articles",
     },
+    {
+      label: "Unread Messages",
+      value: unreadMessages,
+      icon: Mail,
+      href: "/admin/messages",
+    },
   ];
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-8 text-[#0f172a]">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
         {stats.map((stat) => (
           <Link
             key={stat.label}

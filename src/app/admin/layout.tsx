@@ -9,6 +9,7 @@ import {
   Rss,
   Activity,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ const NAV = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Articles", href: "/admin/articles", icon: Newspaper },
   { label: "Opinions", href: "/admin/opinions", icon: MessageSquare },
+  { label: "Messages", href: "/admin/messages", icon: Mail },
   { label: "Sources", href: "/admin/sources", icon: Rss },
   { label: "Ingestion", href: "/admin/ingestion", icon: Activity },
 ];
