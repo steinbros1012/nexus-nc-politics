@@ -149,6 +149,19 @@ export async function ingestSource(sourceId: string): Promise<IngestResult> {
 
         const publishedAt = item.pubDate ? new Date(item.pubDate) : new Date();
         const title = item.title?.trim() || "Untitled";
+
+        // Cross-source title dedup: skip if same title ingested in last 48h
+        const titleDupe = await prisma.article.findFirst({
+          where: {
+            title: { equals: title, mode: "insensitive" },
+            publishedAt: { gte: new Date(publishedAt.getTime() - 48 * 60 * 60 * 1000) },
+          },
+        });
+        if (titleDupe) {
+          articlesDupe++;
+          continue;
+        }
+
         const summary =
           item.contentSnippet?.slice(0, 600) ||
           item.summary?.slice(0, 600) ||
