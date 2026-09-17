@@ -61,6 +61,16 @@ function StatCard({
   );
 }
 
+function formatTimeSince(date: Date): string {
+  const secs = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (secs < 60) return `${secs}s ago`;
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) return `${mins}m ${secs % 60}s ago`;
+  const hrs = Math.floor(mins / 60);
+  const remMins = mins % 60;
+  return `${hrs}h ${remMins}m ago`;
+}
+
 export default async function AdminDashboard() {
   const [
     totalArticles,
@@ -76,6 +86,7 @@ export default async function AdminDashboard() {
     recentArticles,
     recentLogs,
     topArticles,
+    lastIngestLog,
   ] = await Promise.all([
     prisma.article.count({ where: { isHidden: false } }),
     prisma.newsSource.count(),
@@ -111,10 +122,23 @@ export default async function AdminDashboard() {
       take: 5,
       include: { source: { select: { name: true } } },
     }),
+    prisma.ingestionLog.findFirst({
+      where: { status: "success" },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true, articlesNew: true },
+    }),
   ]);
 
   const totalViewCount = totalViews._sum.viewCount || 0;
   const totalClickCount = totalClicks._sum.clickCount || 0;
+
+  const lastIngestLabel = lastIngestLog
+    ? formatTimeSince(lastIngestLog.createdAt)
+    : "Never";
+
+  const lastIngestSub = lastIngestLog
+    ? `+${lastIngestLog.articlesNew} articles added`
+    : "No successful runs yet";
 
   return (
     <div>
@@ -170,7 +194,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Secondary stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8">
         <div className="bg-white rounded-2xl p-5 flex items-center gap-4" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
           <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
             <Rss className="w-5 h-5 text-emerald-600" />
@@ -196,6 +220,16 @@ export default async function AdminDashboard() {
           <div>
             <p className="text-sm font-bold text-[#0f172a]">Every 2 Hours</p>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Auto-Ingest Schedule</p>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl p-5 flex items-center gap-4" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+          <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center shrink-0">
+            <CheckCircle className="w-5 h-5 text-violet-500" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-bold text-[#0f172a] tabular-nums truncate">{lastIngestLabel}</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Last Ingested</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">{lastIngestSub}</p>
           </div>
         </div>
       </div>
