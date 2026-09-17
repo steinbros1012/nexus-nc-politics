@@ -205,7 +205,7 @@ export default async function AdminDashboard() {
           value={subscriberCount}
           sub="newsletter sign-ups"
           icon={Users}
-          href="#subscribers"
+          href="/admin/subscribers"
           accent="#0891b2"
         />
       </div>
