@@ -11,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowUpRight,
+  Users,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -87,6 +88,8 @@ export default async function AdminDashboard() {
     recentLogs,
     topArticles,
     lastIngestLog,
+    subscriberCount,
+    recentSubscribers,
   ] = await Promise.all([
     prisma.article.count({ where: { isHidden: false } }),
     prisma.newsSource.count(),
@@ -127,6 +130,12 @@ export default async function AdminDashboard() {
       orderBy: { createdAt: "desc" },
       select: { createdAt: true, articlesNew: true },
     }),
+    prisma.newsletterSubscriber.count({ where: { active: true } }),
+    prisma.newsletterSubscriber.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      select: { email: true, createdAt: true },
+    }),
   ]);
 
   const totalViewCount = totalViews._sum.viewCount || 0;
@@ -158,7 +167,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <StatCard
           label="Total Articles"
           value={totalArticles}
@@ -190,6 +199,14 @@ export default async function AdminDashboard() {
           icon={Mail}
           href="/admin/messages"
           accent="#b91c1c"
+        />
+        <StatCard
+          label="Subscribers"
+          value={subscriberCount}
+          sub="newsletter sign-ups"
+          icon={Users}
+          href="#subscribers"
+          accent="#0891b2"
         />
       </div>
 
@@ -232,6 +249,31 @@ export default async function AdminDashboard() {
             <p className="text-[11px] text-gray-400 mt-0.5">{lastIngestSub}</p>
           </div>
         </div>
+      </div>
+
+      {/* Subscribers */}
+      <div id="subscribers" className="bg-white rounded-2xl p-6 mb-6" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-cyan-600" />
+            <h2 className="font-bold text-sm uppercase tracking-widest text-gray-400">Newsletter Subscribers</h2>
+          </div>
+          <span className="text-xs font-semibold text-cyan-600 bg-cyan-50 rounded-full px-2.5 py-1">{subscriberCount} total</span>
+        </div>
+        {recentSubscribers.length === 0 ? (
+          <p className="text-gray-400 text-sm">No subscribers yet.</p>
+        ) : (
+          <div className="divide-y divide-gray-50">
+            {recentSubscribers.map((s) => (
+              <div key={s.email} className="flex items-center justify-between py-2.5">
+                <span className="text-sm font-medium text-[#0f172a]">{s.email}</span>
+                <span className="text-[11px] text-gray-400 tabular-nums">
+                  {s.createdAt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Tables row */}
