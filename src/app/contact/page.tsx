@@ -13,10 +13,25 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  const [error, setError] = useState("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // In production, this would send an email via API
-    setSubmitted(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    }
   }
 
   if (submitted) {
@@ -98,6 +113,7 @@ export default function ContactPage() {
           />
         </div>
 
+        {error && <p className="text-red-600 text-sm">{error}</p>}
         <button
           type="submit"
           className="w-full bg-header-bg text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
