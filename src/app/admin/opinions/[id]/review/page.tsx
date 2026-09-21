@@ -46,6 +46,23 @@ export default function ReviewOpinionPage() {
       .catch(() => setMessage("Failed to load."));
   }, [params.id]);
 
+  async function deleteOpinion() {
+    if (!confirm("Permanently delete this submission? This cannot be undone.")) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/opinions/${params.id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/admin/opinions");
+      } else {
+        setMessage("Failed to delete.");
+        setSaving(false);
+      }
+    } catch {
+      setMessage("Network error.");
+      setSaving(false);
+    }
+  }
+
   async function updateStatus(newStatus: string) {
     setSaving(true);
     setMessage("");
@@ -251,6 +268,13 @@ export default function ReviewOpinionPage() {
             Reject
           </button>
         )}
+        <button
+          onClick={deleteOpinion}
+          disabled={saving}
+          className="ml-auto bg-white border border-red-200 text-red-600 px-5 py-2.5 rounded-lg font-medium hover:bg-red-50 disabled:opacity-50 transition-colors"
+        >
+          Delete Permanently
+        </button>
       </div>
     </div>
   );

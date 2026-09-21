@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { Search } from "lucide-react";
+import DeleteArticleButton from "./DeleteArticleButton";
 
 export const dynamic = "force-dynamic";
 
@@ -107,12 +108,15 @@ export default async function AdminArticlesPage({
                   {article.viewCount.toLocaleString()}
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  <Link
-                    href={`/admin/articles/${article.id}/edit`}
-                    className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-[#1d4ed8] bg-blue-50 hover:bg-blue-100 rounded-lg no-underline transition-colors"
-                  >
-                    Edit
-                  </Link>
+                  <div className="flex items-center justify-end gap-1.5">
+                    <Link
+                      href={`/admin/articles/${article.id}/edit`}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-semibold text-[#1d4ed8] bg-blue-50 hover:bg-blue-100 rounded-lg no-underline transition-colors"
+                    >
+                      Edit
+                    </Link>
+                    <DeleteArticleButton id={article.id} />
+                  </div>
                 </td>
               </tr>
             ))}

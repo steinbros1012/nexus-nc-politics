@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import DeleteOpinionButton from "./DeleteOpinionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -111,12 +112,15 @@ export default async function AdminOpinionsPage({
                     <span>Submitted {formatDate(op.createdAt)}</span>
                   </div>
                 </div>
-                <Link
-                  href={`/admin/opinions/${op.id}/review`}
-                  className="shrink-0 inline-flex items-center px-4 py-2 bg-[#0f172a] text-white text-xs font-semibold rounded-xl hover:bg-gray-800 no-underline transition-colors"
-                >
-                  Review
-                </Link>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Link
+                    href={`/admin/opinions/${op.id}/review`}
+                    className="inline-flex items-center px-4 py-2 bg-[#0f172a] text-white text-xs font-semibold rounded-xl hover:bg-gray-800 no-underline transition-colors"
+                  >
+                    Review
+                  </Link>
+                  <DeleteOpinionButton id={op.id} />
+                </div>
               </div>
             );
           })}
