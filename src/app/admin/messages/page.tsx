@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
+import DeleteMessageButton from "./DeleteMessageButton";
 
 export const dynamic = "force-dynamic";
 
@@ -68,9 +69,12 @@ export default async function MessagesPage() {
                     {msg.email}
                   </a>
                 </div>
-                <time className="text-xs text-gray-400 shrink-0">
-                  {formatDate(msg.createdAt)}
-                </time>
+                <div className="flex items-center gap-2 shrink-0">
+                  <time className="text-xs text-gray-400">
+                    {formatDate(msg.createdAt)}
+                  </time>
+                  <DeleteMessageButton id={msg.id} />
+                </div>
               </div>
               <p className="mt-3 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap border-t border-gray-50 pt-3">
                 {msg.message}
