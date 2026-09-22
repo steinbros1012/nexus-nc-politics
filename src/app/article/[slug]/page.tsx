@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { formatDate } from "@/lib/utils";
 import CategoryBadge from "@/components/ui/CategoryBadge";
 import ArticleCardSmall from "@/components/news/ArticleCardSmall";
+import ViewTracker from "@/components/ViewTracker";
 import type { Metadata } from "next";
 
 interface ArticlePageProps {
@@ -48,14 +49,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   if (!article || article.isHidden) notFound();
 
-  // Track view (fire and forget)
-  prisma.article
-    .update({
-      where: { id: article.id },
-      data: { viewCount: { increment: 1 } },
-    })
-    .catch(() => {});
-
   const relatedArticles = await prisma.article.findMany({
     where: {
       isHidden: false,
@@ -75,6 +68,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
+      <ViewTracker articleId={article.id} />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-gray-400 mb-8">
         <Link href="/" className="hover:text-link no-underline text-gray-400">
