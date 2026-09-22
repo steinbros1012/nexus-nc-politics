@@ -88,8 +88,8 @@ export default async function OpinionArticlePage({
       </div>
 
       <article className="prose prose-lg max-w-none mb-8">
-        {opinion.body.split("\n").map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
+        {opinion.body.split(/\n\n+/).map((paragraph, i) => (
+          paragraph.trim() ? <p key={i}>{paragraph.trim()}</p> : null
         ))}
       </article>
 
