@@ -17,17 +17,22 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Invalid email or password.");
+      if (!result || result?.error) {
+        setError("Invalid email or password.");
+      } else {
+        router.push("/admin");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
-    } else {
-      router.push("/admin");
     }
   }
 
