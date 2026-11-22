@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import ArticleCard from "@/components/news/ArticleCard";
 import SectionHeader from "@/components/news/SectionHeader";
 import type { Metadata } from "next";
@@ -28,7 +28,7 @@ export async function generateMetadata({
 }: CategoryPageProps): Promise<Metadata> {
   const { category: slug } = await params;
   if (!VALID_CATEGORIES.includes(slug)) return { title: "Not Found" };
-  const cat = await prisma.category.findUnique({ where: { slug } });
+  const cat = await db.category.findUnique({ where: { slug } });
   return {
     title: cat?.name || slug,
     description: cat?.description || `NC ${cat?.name || slug} news`,
@@ -46,14 +46,14 @@ export default async function CategoryPage({
 
   if (!VALID_CATEGORIES.includes(slug)) notFound();
 
-  const category = await prisma.category.findUnique({ where: { slug } });
+  const category = await db.category.findUnique({ where: { slug } });
   if (!category) notFound();
 
   const page = Math.max(1, parseInt(pageParam || "1", 10));
   const perPage = 20;
 
   const [articles, total] = await Promise.all([
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false, categoryId: category.id },
       include: {
         source: { select: { name: true } },
@@ -63,7 +63,7 @@ export default async function CategoryPage({
       skip: (page - 1) * perPage,
       take: perPage,
     }),
-    prisma.article.count({
+    db.article.count({
       where: { isHidden: false, categoryId: category.id },
     }),
   ]);

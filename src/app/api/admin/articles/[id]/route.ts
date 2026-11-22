@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { refreshPublicPages } from "@/lib/cache";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -63,6 +64,7 @@ export async function PATCH(
     data,
   });
 
+  refreshPublicPages();
   return NextResponse.json({ article });
 }
 
@@ -81,6 +83,7 @@ export async function DELETE(
   await prisma.articleView.deleteMany({ where: { articleId: id } });
   await prisma.externalClick.deleteMany({ where: { articleId: id } });
   await prisma.article.delete({ where: { id } });
+  refreshPublicPages();
 
   return NextResponse.json({ success: true });
 }

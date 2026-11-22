@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
+import OpinionViewTracker from "@/components/OpinionViewTracker";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -13,7 +14,7 @@ export async function generateMetadata({
   params,
 }: OpinionPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const opinion = await prisma.opinionSubmission.findUnique({
+  const opinion = await db.opinionSubmission.findUnique({
     where: { slug },
     select: { headline: true },
   });
@@ -27,22 +28,15 @@ export default async function OpinionArticlePage({
 }: OpinionPageProps) {
   const { slug } = await params;
 
-  const opinion = await prisma.opinionSubmission.findUnique({
+  const opinion = await db.opinionSubmission.findUnique({
     where: { slug },
   });
 
   if (!opinion || opinion.status !== "PUBLISHED") notFound();
 
-  // Track view
-  prisma.opinionSubmission
-    .update({
-      where: { id: opinion.id },
-      data: { viewCount: { increment: 1 } },
-    })
-    .catch(() => {});
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
+      <OpinionViewTracker opinionId={opinion.id} />
       <nav className="flex items-center gap-1 text-sm text-muted mb-6">
         <Link href="/" className="hover:text-link no-underline text-muted">
           Home

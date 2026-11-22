@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { refreshPublicPages } from "@/lib/cache";
 import { ingestAllSources } from "@/lib/ingest";
 import prisma from "@/lib/prisma";
 
@@ -30,6 +31,8 @@ export async function GET(req: NextRequest) {
       ingestAllSources(),
       expireBreakingNews(),
     ]);
+
+    refreshPublicPages();
 
     const totalNew = results.reduce((sum, r) => sum + r.articlesNew, 0);
     const totalErrors = results.reduce((sum, r) => sum + r.articlesErr, 0);

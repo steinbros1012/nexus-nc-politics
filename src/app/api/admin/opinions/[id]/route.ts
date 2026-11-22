@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { refreshPublicPages } from "@/lib/cache";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
@@ -35,6 +36,7 @@ export async function DELETE(
 
   const { id } = await params;
   await prisma.opinionSubmission.delete({ where: { id } });
+  refreshPublicPages();
   return NextResponse.json({ success: true });
 }
 
@@ -74,5 +76,6 @@ export async function PATCH(
     data,
   });
 
+  refreshPublicPages();
   return NextResponse.json({ opinion });
 }

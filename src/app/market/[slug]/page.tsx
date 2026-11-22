@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import ArticleCard from "@/components/news/ArticleCard";
 import SectionHeader from "@/components/news/SectionHeader";
 import type { Metadata } from "next";
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params,
 }: MarketPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const market = await prisma.market.findUnique({ where: { slug } });
+  const market = await db.market.findUnique({ where: { slug } });
   return {
     title: market ? `${market.name} Political News` : "Market Not Found",
   };
@@ -22,14 +22,14 @@ export const dynamic = "force-dynamic";
 
 export default async function MarketPage({ params }: MarketPageProps) {
   const { slug } = await params;
-  const market = await prisma.market.findUnique({
+  const market = await db.market.findUnique({
     where: { slug },
     include: { region: true },
   });
 
   if (!market) notFound();
 
-  const articles = await prisma.article.findMany({
+  const articles = await db.article.findMany({
     where: { isHidden: false, marketId: market.id },
     include: {
       source: { select: { name: true } },

@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -7,15 +7,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://ncpolitics.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [articles, categories, regions, opinions] = await Promise.all([
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false },
       select: { slug: true, updatedAt: true },
       orderBy: { publishedAt: "desc" },
       take: 1000,
     }),
-    prisma.category.findMany({ select: { slug: true } }),
-    prisma.region.findMany({ select: { slug: true } }),
-    prisma.opinionSubmission.findMany({
+    db.category.findMany({ select: { slug: true } }),
+    db.region.findMany({ select: { slug: true } }),
+    db.opinionSubmission.findMany({
       where: { status: "PUBLISHED" },
       select: { slug: true, updatedAt: true },
     }),

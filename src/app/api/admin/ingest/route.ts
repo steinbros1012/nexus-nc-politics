@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { refreshPublicPages } from "@/lib/cache";
 import { auth } from "@/lib/auth";
 import { ingestAllSources } from "@/lib/ingest";
 import prisma from "@/lib/prisma";
@@ -41,6 +42,7 @@ export async function POST() {
 
   try {
     const results = await ingestAllSources();
+    refreshPublicPages();
     return NextResponse.json({ success: true, results });
   } catch {
     return NextResponse.json(

@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import ArticleCard from "@/components/news/ArticleCard";
 import ArticleCardFeatured from "@/components/news/ArticleCardFeatured";
 import ArticleCardSmall from "@/components/news/ArticleCardSmall";
@@ -25,38 +25,38 @@ export default async function HomePage() {
     mostViewed,
     publishedOpinions,
   ] = await Promise.all([
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isBreaking: true, isHidden: false },
       select: { slug: true, title: true },
       orderBy: { publishedAt: "desc" },
       take: 3,
     }),
     // Prefer featured + has image, then featured, then just latest with image, then latest
-    prisma.article.findFirst({
+    db.article.findFirst({
       where: { isHidden: false, isFeatured: true, NOT: { imageUrl: null } },
       include: articleInclude,
       orderBy: { publishedAt: "desc" },
     }).then(async (a) => {
       if (a) return a
-      const withImage = await prisma.article.findFirst({
+      const withImage = await db.article.findFirst({
         where: { isHidden: false, NOT: { imageUrl: null } },
         include: articleInclude,
         orderBy: { publishedAt: "desc" },
       })
       if (withImage) return withImage
-      return prisma.article.findFirst({
+      return db.article.findFirst({
         where: { isHidden: false },
         include: articleInclude,
         orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
       })
     }),
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false },
       include: articleInclude,
       orderBy: { publishedAt: "desc" },
       take: 21,
     }),
-    prisma.article.findMany({
+    db.article.findMany({
       where: {
         isHidden: false,
         category: { slug: { in: ["politics", "government"] } },
@@ -65,19 +65,19 @@ export default async function HomePage() {
       orderBy: { publishedAt: "desc" },
       take: 4,
     }),
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false, category: { slug: "legislature" } },
       include: articleInclude,
       orderBy: { publishedAt: "desc" },
       take: 4,
     }),
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false, category: { slug: "elections" } },
       include: articleInclude,
       orderBy: { publishedAt: "desc" },
       take: 4,
     }),
-    prisma.article.findMany({
+    db.article.findMany({
       where: { isHidden: false },
       include: articleInclude,
       orderBy: [
@@ -87,7 +87,7 @@ export default async function HomePage() {
       ],
       take: 5,
     }),
-    prisma.opinionSubmission.findMany({
+    db.opinionSubmission.findMany({
       where: { status: "PUBLISHED" },
       orderBy: { publishedAt: "desc" },
       take: 6,

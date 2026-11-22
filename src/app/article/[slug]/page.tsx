@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ExternalLink, Clock, MapPin, Tag, ChevronRight } from "lucide-react";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import { formatDate } from "@/lib/utils";
 import CategoryBadge from "@/components/ui/CategoryBadge";
 import ArticleCardSmall from "@/components/news/ArticleCardSmall";
@@ -16,7 +16,7 @@ export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await prisma.article.findUnique({
+  const article = await db.article.findUnique({
     where: { slug },
     select: { title: true, summary: true, imageUrl: true },
   });
@@ -37,7 +37,7 @@ export const dynamic = "force-dynamic";
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  const article = await prisma.article.findUnique({
+  const article = await db.article.findUnique({
     where: { slug },
     include: {
       source: true,
@@ -49,7 +49,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   if (!article || article.isHidden) notFound();
 
-  const relatedArticles = await prisma.article.findMany({
+  const relatedArticles = await db.article.findMany({
     where: {
       isHidden: false,
       id: { not: article.id },

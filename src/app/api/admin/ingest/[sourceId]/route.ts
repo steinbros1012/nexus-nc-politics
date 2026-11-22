@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { refreshPublicPages } from "@/lib/cache";
 import { auth } from "@/lib/auth";
 import { ingestSource } from "@/lib/ingest";
 
@@ -15,6 +16,7 @@ export async function POST(
 
   try {
     const result = await ingestSource(sourceId);
+    refreshPublicPages();
     return NextResponse.json({ success: true, result });
   } catch {
     return NextResponse.json(

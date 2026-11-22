@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import ArticleCard from "@/components/news/ArticleCard";
 import SectionHeader from "@/components/news/SectionHeader";
 import type { Metadata } from "next";
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params,
 }: RegionPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const region = await prisma.region.findUnique({ where: { slug } });
+  const region = await db.region.findUnique({ where: { slug } });
   return {
     title: region ? `${region.name} News` : "Region Not Found",
   };
@@ -22,14 +22,14 @@ export const dynamic = "force-dynamic";
 
 export default async function RegionPage({ params }: RegionPageProps) {
   const { slug } = await params;
-  const region = await prisma.region.findUnique({
+  const region = await db.region.findUnique({
     where: { slug },
     include: { markets: { orderBy: { name: "asc" } } },
   });
 
   if (!region) notFound();
 
-  const articles = await prisma.article.findMany({
+  const articles = await db.article.findMany({
     where: { isHidden: false, regionId: region.id },
     include: {
       source: { select: { name: true } },

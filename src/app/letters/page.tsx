@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import SectionHeader from "@/components/news/SectionHeader";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function LettersPage() {
-  const letters = await prisma.opinionSubmission.findMany({
+  const letters = await db.opinionSubmission.findMany({
     where: { status: "PUBLISHED", type: "LETTER" },
     orderBy: { publishedAt: "desc" },
     take: 50,

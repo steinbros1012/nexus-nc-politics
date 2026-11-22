@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 
 const PUBLICATION_NAME =
   process.env.NEXT_PUBLIC_PUBLICATION_NAME || "NC Politics";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://ncpolitics.com";
 
 export async function GET() {
-  const articles = await prisma.article.findMany({
+  const articles = await db.article.findMany({
     where: { isHidden: false },
     include: {
       source: { select: { name: true } },

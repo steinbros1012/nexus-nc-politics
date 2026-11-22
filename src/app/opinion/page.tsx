@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { db } from "@/lib/cache";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -14,12 +14,12 @@ export const dynamic = "force-dynamic";
 
 export default async function OpinionPage() {
   const [editorials, letters] = await Promise.all([
-    prisma.opinionSubmission.findMany({
+    db.opinionSubmission.findMany({
       where: { status: "PUBLISHED", type: "EDITORIAL" },
       orderBy: { publishedAt: "desc" },
       take: 20,
     }),
-    prisma.opinionSubmission.findMany({
+    db.opinionSubmission.findMany({
       where: { status: "PUBLISHED", type: "LETTER" },
       orderBy: { publishedAt: "desc" },
       take: 20,
